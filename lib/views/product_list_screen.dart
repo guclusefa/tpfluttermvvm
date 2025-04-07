@@ -1,12 +1,6 @@
-// 🎯 Fonctionnalités ajoutées :
-// 1. Barre de recherche locale
-// 2. Tri par prix (ascendant / descendant)
-// 3. Ajout aux favoris (wishlist)
-// 4. Affichage uniquement des favoris
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../components/product_view_model.dart';
+import '../view_models/product_view_model.dart';
 import 'product_detail_screen.dart';
 import 'product_form_screen.dart';
 

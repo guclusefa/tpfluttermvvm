@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/product.dart';
-import '../components/product_view_model.dart';
+import '../view_models/product_view_model.dart';
 
 class ProductFormScreen extends StatefulWidget {
   final Product? product;
