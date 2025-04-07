@@ -1,6 +1,8 @@
 // 🎯 Fonctionnalités ajoutées :
 // 1. Barre de recherche locale
 // 2. Tri par prix (ascendant / descendant)
+// 3. Ajout aux favoris (wishlist)
+// 4. Affichage uniquement des favoris
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +18,7 @@ class ProductListScreen extends StatefulWidget {
 class _ProductListScreenState extends State<ProductListScreen> {
   String _searchQuery = '';
   bool _sortAsc = true;
+  bool _showFavorites = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +34,13 @@ class _ProductListScreenState extends State<ProductListScreen> {
               setState(() => _sortAsc = !_sortAsc);
             },
             tooltip: "Trier par prix",
+          ),
+          IconButton(
+            icon: Icon(_showFavorites ? Icons.favorite : Icons.favorite_border),
+            onPressed: () {
+              setState(() => _showFavorites = !_showFavorites);
+            },
+            tooltip: "Afficher les favoris",
           ),
         ],
       ),
@@ -67,6 +77,13 @@ class _ProductListScreenState extends State<ProductListScreen> {
                             )
                             .toList();
 
+                    if (_showFavorites) {
+                      filteredProducts =
+                          filteredProducts
+                              .where((p) => vm.favorites.contains(p.id))
+                              .toList();
+                    }
+
                     filteredProducts.sort(
                       (a, b) =>
                           _sortAsc
@@ -78,6 +95,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       itemCount: filteredProducts.length,
                       itemBuilder: (context, index) {
                         final product = filteredProducts[index];
+                        final isFavorite = vm.favorites.contains(product.id);
+
                         return ListTile(
                           leading: Image.network(
                             product.image,
@@ -99,6 +118,15 @@ class _ProductListScreenState extends State<ProductListScreen> {
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
+                              IconButton(
+                                icon: Icon(
+                                  isFavorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: isFavorite ? Colors.red : null,
+                                ),
+                                onPressed: () => vm.toggleFavorite(product.id),
+                              ),
                               IconButton(
                                 icon: Icon(Icons.edit),
                                 onPressed: () {
