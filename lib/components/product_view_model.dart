@@ -16,6 +16,30 @@ class ProductViewModel extends ChangeNotifier {
     setLoading(false);
   }
 
+  Future<void> addProduct(Product product) async {
+    setLoading(true);
+    final newProduct = await _apiService.addProduct(product);
+    _products.add(newProduct);
+    setLoading(false);
+  }
+
+  Future<void> updateProduct(Product product) async {
+    setLoading(true);
+    final updated = await _apiService.updateProduct(product);
+    final index = _products.indexWhere((p) => p.id == product.id);
+    if (index != -1) {
+      _products[index] = updated;
+    }
+    setLoading(false);
+  }
+
+  Future<void> deleteProduct(int id) async {
+    setLoading(true);
+    await _apiService.deleteProduct(id);
+    _products.removeWhere((p) => p.id == id);
+    setLoading(false);
+  }
+
   void setLoading(bool value) {
     _loading = value;
     notifyListeners();

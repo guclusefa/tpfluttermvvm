@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../components/product_view_model.dart';
 import 'product_detail_screen.dart';
+import 'product_form_screen.dart';
 
 class ProductListScreen extends StatelessWidget {
   @override
@@ -18,6 +19,7 @@ class ProductListScreen extends StatelessWidget {
               if (vm.loading) {
                 return Center(child: CircularProgressIndicator());
               }
+
               return ListView.builder(
                 itemCount: vm.products.length,
                 itemBuilder: (context, index) {
@@ -27,6 +29,7 @@ class ProductListScreen extends StatelessWidget {
                       product.image,
                       width: 50,
                       height: 50,
+                      fit: BoxFit.cover,
                     ),
                     title: Text(product.title),
                     subtitle: Text("${product.price} €"),
@@ -38,10 +41,45 @@ class ProductListScreen extends StatelessWidget {
                                 (_) => ProductDetailScreen(product: product),
                           ),
                         ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (_) => ProductFormScreen(product: product),
+                              ),
+                            );
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () async {
+                            await Provider.of<ProductViewModel>(
+                              context,
+                              listen: false,
+                            ).deleteProduct(product.id);
+                          },
+                        ),
+                      ],
+                    ),
                   );
                 },
               );
             },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => ProductFormScreen()),
           );
         },
       ),
